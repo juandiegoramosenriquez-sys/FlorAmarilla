@@ -1191,9 +1191,9 @@
   </div>
 
 
-  <script>
-    // 1. Usamos una URL directa a la canción de internet para que no dependas de archivos locales
-    const audioUrl = "https://ia801503.us.archive.org/15/items/emmanuel-la-chica-de-humo/Emmanuel%20-%20La%20Chica%20De%20Humo.mp3";
+<script>
+    // Usamos el archivo local que tienes en tu carpeta
+    const audioUrl = "./chica_de_humo.mp3";
     
     const bgAudio = new Audio(audioUrl);
     bgAudio.loop = true;
@@ -1212,12 +1212,10 @@
     }
 
     function playAudio() {
-      // Forzamos la reproducción e intentamos reanudar si el navegador la bloquea
       const promise = bgAudio.play();
       if (promise !== undefined) {
         promise.catch(error => {
-          console.log("El navegador bloqueó el inicio automático. Reintentando...");
-          // Si falla, agregamos un escucha para reproducir con cualquier toque en pantalla
+          console.log("El navegador bloqueó el inicio automático. Reintentando con clic...");
           document.body.addEventListener('click', () => {
             bgAudio.play();
           }, { once: true });

@@ -1192,9 +1192,7 @@
 
 
 <script>
-    // Usamos el archivo local que tienes en tu carpeta
-    const audioUrl = "./chica_de_humo.mp3";
-    
+    const audioUrl = "chica_de_humo.mp3";
     const bgAudio = new Audio(audioUrl);
     bgAudio.loop = true;
     bgAudio.volume = 0.8;
@@ -1211,16 +1209,13 @@
       btnNo.style.top = `${randomY}px`;
     }
 
+    // Función forzada de reproducción tras interacción del usuario
     function playAudio() {
-      const promise = bgAudio.play();
-      if (promise !== undefined) {
-        promise.catch(error => {
-          console.log("El navegador bloqueó el inicio automático. Reintentando con clic...");
-          document.body.addEventListener('click', () => {
-            bgAudio.play();
-          }, { once: true });
-        });
-      }
+      bgAudio.play().then(() => {
+        console.log("Audio reproduciendo correctamente");
+      }).catch(error => {
+        console.log("El navegador requiere interacción previa:", error);
+      });
     }
 
     function createPetals() {
@@ -1248,6 +1243,8 @@
     }
 
     function answerNo() {
+      // Activar audio también al tocar "No" por si acaso
+      playAudio(); 
       noCount++;
       if (noCount >= 2) {
         document.getElementById("questionScreen1").classList.add("hidden");
@@ -1258,8 +1255,6 @@
     }
 
     function goToFlowers() {
-      playAudio();
-
       document.getElementById("questionScreen1").classList.add("hidden");
       document.getElementById("questionScreen2").classList.add("hidden");
       document.getElementById("flowersContainer").classList.add("show");
@@ -1270,7 +1265,14 @@
         document.body.classList.remove("container");
       }, 100);
     }
-  </script>
 
+    // Escuchador global: Al primer toque en cualquier lugar de la pantalla, desbloquea/reproduce el audio
+    document.addEventListener("click", () => {
+      if (bgAudio.paused) {
+        playAudio();
+      }
+    }, { once: true });
+  </script>
+  
 </body>
 </html>
